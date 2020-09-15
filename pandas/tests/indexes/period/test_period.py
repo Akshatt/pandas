@@ -32,7 +32,7 @@ class TestPeriodIndex(DatetimeLike):
         ],
         ids=["index_inc", "index_dec"],
     )
-    def indices(self, request):
+    def index(self, request):
         return request.param
 
     def create_index(self) -> PeriodIndex:
@@ -535,6 +535,12 @@ class TestPeriodIndex(DatetimeLike):
         ).set_index(["A", "B", "C"])
         with pytest.raises(KeyError, match=msg):
             df.loc[key]
+
+    def test_format_empty(self):
+        # GH35712
+        empty_idx = self._holder([], freq="A")
+        assert empty_idx.format() == []
+        assert empty_idx.format(name=True) == [""]
 
 
 def test_maybe_convert_timedelta():
