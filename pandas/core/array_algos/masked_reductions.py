@@ -14,11 +14,11 @@ from pandas.core.nanops import check_below_min_count
 
 
 def _sumprod(
-    func: Callable,
-    values: np.ndarray,
-    mask: np.ndarray,
-    skipna: bool = True,
-    min_count: int = 0,
+        func: Callable,
+        values: np.ndarray,
+        mask: np.ndarray,
+        skipna: bool = True,
+        min_count: int = 0,
 ):
     """
     Sum or product for 1D masked array.
@@ -103,7 +103,7 @@ def max(values: np.ndarray, mask: np.ndarray, skipna: bool = True):
 
 
 def mean(values: np.ndarray, mask: np.ndarray, skipna: bool = True):
-
+    
     _sum = _sumprod(np.sum, values=values, mask=mask, skipna=skipna)
     count = np.count_nonzero(~mask)
     mean_value = _sum / count
