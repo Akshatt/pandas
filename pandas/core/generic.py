@@ -1681,10 +1681,7 @@ class NDFrame(PandasObject, SelectionMixin, indexing.IndexingMixin):
 
             label_axis_name = "column" if axis == 0 else "index"
             raise ValueError(
-                (
-                    f"The {label_axis_name} label '{key}' "
-                    f"is not unique.{multi_message}"
-                )
+                f"The {label_axis_name} label '{key}' is not unique.{multi_message}"
             )
 
         return values
@@ -1725,10 +1722,8 @@ class NDFrame(PandasObject, SelectionMixin, indexing.IndexingMixin):
 
         if invalid_keys:
             raise ValueError(
-                (
-                    "The following keys are not valid labels or "
-                    f"levels for axis {axis}: {invalid_keys}"
-                )
+                "The following keys are not valid labels or "
+                f"levels for axis {axis}: {invalid_keys}"
             )
 
         # Compute levels and labels to drop
@@ -3154,7 +3149,7 @@ class NDFrame(PandasObject, SelectionMixin, indexing.IndexingMixin):
         columns: Optional[Sequence[Label]] = None,
         header: Union[bool_t, List[str]] = True,
         index: bool_t = True,
-        index_label: IndexLabel = None,
+        index_label: Optional[IndexLabel] = None,
         mode: str = "w",
         encoding: Optional[str] = None,
         compression: CompressionOptions = "infer",
@@ -4409,6 +4404,32 @@ class NDFrame(PandasObject, SelectionMixin, indexing.IndexingMixin):
         3  NaN     8     4    D
         4    D     7     2    e
         5    C     4     3    F
+
+        Natural sort with the key argument,
+        using the `natsort <https://github.com/SethMMorton/natsort>` package.
+
+        >>> df = pd.DataFrame({
+        ...    "time": ['0hr', '128hr', '72hr', '48hr', '96hr'],
+        ...    "value": [10, 20, 30, 40, 50]
+        ... })
+        >>> df
+            time  value
+        0    0hr     10
+        1  128hr     20
+        2   72hr     30
+        3   48hr     40
+        4   96hr     50
+        >>> from natsort import index_natsorted
+        >>> df.sort_values(
+        ...    by="time",
+        ...    key=lambda x: np.argsort(index_natsorted(df["time"]))
+        ... )
+            time  value
+        0    0hr     10
+        3   48hr     40
+        2   72hr     30
+        4   96hr     50
+        1  128hr     20
         """
         raise AbstractMethodError(self)
 
